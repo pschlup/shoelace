@@ -15,8 +15,8 @@ import { readFileSync } from 'fs';
 import { replace } from 'esbuild-plugin-replace';
 
 const { serve } = commandLineArgs([{ name: 'serve', type: Boolean }]);
-const outdir = 'dist';
-const cdndir = 'cdn';
+const outdir = 'build/dist';
+const cdndir = 'build/cdn';
 const sitedir = '_site';
 const spinner = ora({ hideCursor: false }).start();
 const execPromise = util.promisify(exec);

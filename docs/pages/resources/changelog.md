@@ -14,12 +14,17 @@ New versions of Shoelace are released as-needed and generally occur when a criti
 
 ## Next
 
+- Added the Slovenian translation [#1893]
 - Added support for `contextElement` to `VirtualElements` in `<sl-popup>` [#1874]
+- Fixed a bug in `.sl-scroll-lock` causing layout shifts. [#1895]
 - Fixed a bug in `<sl-rating>` that caused the rating to not reset in some circumstances [#1877]
 - Fixed a bug in `<sl-select>` that caused the menu to not close when rendered in a shadow root [#1878]
 - Fixed a bug in `<sl-tree>` that caused a new stacking context resulting in tooltips being clipped [#1709]
 - Fixed a bug in `<sl-tab-group>` that caused the scroll controls to toggle indefinitely when zoomed in Safari [#1839]
 - Fixed a bug in the submenu controller that allowed two submenus to be open at the same time [#1880]
+- Fixed a bug in `<sl-select>` where the tag size wouldn't update with the control's size [#1886]
+- Fixed a bug in `<sl-checkbox>` and `<sl-switch>` where the color of the required content wasn't applying correctly
+- Fixed a bug in `<sl-checkbox>` where help text was incorrectly styled [#1897]
 
 ## 2.14.0
 

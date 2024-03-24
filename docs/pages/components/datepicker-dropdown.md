@@ -16,7 +16,7 @@ layout: component
 Specify the initial date using the `date` attribute. The date should be a string in the format `YYYY-MM-DD`.
 
 ```html:preview:expanded
-<sl-datepicker-dropdown date="2024-02-15"></sl-datepicker-dropdown>
+<sl-datepicker-dropdown value="2024-02-15"></sl-datepicker-dropdown>
 ```
 
 ### Specify a locale

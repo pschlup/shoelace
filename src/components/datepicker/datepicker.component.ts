@@ -46,24 +46,24 @@ export default class SlDatepicker extends ShoelaceElement {
 
   /** The selected date, in ISO string format: 'yyyy-mm-dd' */
   @property({type: String, reflect: true})
-  date: string = new Date().toISOString().slice(0, 10);
+  value: string = new Date().toISOString().slice(0, 10);
 
   /** The month currently being displayed. This date should always include day 01 of the month. */
   @property({attribute: false})
-  month: CalendarMonth = parseIso8601String(this.date);
+  month: CalendarMonth = parseIso8601String(this.value);
 
-  @watch('date')
+  @watch('value')
   async handleDateChange() {
     // Ensures the displayed month matches the selected date whenever it changes.
-    this.month = parseIso8601String(this.date);
+    this.month = parseIso8601String(this.value);
   }
 
   private handleDayClick(date: CalendarDate) {
-    this.date = serializeIso8601String(date);
+    this.value = serializeIso8601String(date);
     // TODO: Add the selected date to the event details
     this.emit('sl-date-change', {
       detail: {
-        date: this.date,
+        date: this.value,
       }
     });
   }
@@ -85,7 +85,7 @@ export default class SlDatepicker extends ShoelaceElement {
 
   render() {
     // TODO: Maybe use day.js for simpler translations and date manipulation
-    const date = parseIso8601String(this.date);
+    const date = parseIso8601String(this.value);
     const monthId = this.month.month;
     const firstOfMonth: CalendarDate = { ...this.month, day: 1 };
     const endOfMonth = lastDateInMonth(this.month);

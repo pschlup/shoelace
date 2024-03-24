@@ -43,10 +43,10 @@ export default class SlDatepickerDropdown extends ShoelaceElement {
 
   /** The selected date, in ISO string format: 'yyyy-mm-dd' */
   @property({type: String, reflect: true})
-  date: string = new Date().toISOString().slice(0, 10);
+  value: string = new Date().toISOString().slice(0, 10);
 
   private handleDatePicked(date: string) {
-    this.date = date;
+    this.value = date;
     this.dropdown.open = false;
     this.emit('sl-date-change', {
       detail: {
@@ -61,7 +61,7 @@ export default class SlDatepickerDropdown extends ShoelaceElement {
       <sl-button slot="trigger" caret></sl-button>
       <sl-menu>
         <sl-datepicker
-          date=${this.date}
+          value=${this.value}
           locale=${this.locale}
           @sl-date-change=${(event: CustomEvent) => this.handleDatePicked(event.detail.date) }></sl-datepicker>
       </sl-menu>

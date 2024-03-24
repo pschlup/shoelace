@@ -7,6 +7,6 @@ describe('<sl-datepicker>', () => {
     const el = await fixture(html` <sl-datepicker></sl-datepicker> `) as SlDatepicker;
 
     expect(el).to.exist;
-    await expect(el.date).to.equal(new Date().toISOString().slice(0, 10));
+    await expect(el.value).to.equal(new Date().toISOString().slice(0, 10));
   });
 });

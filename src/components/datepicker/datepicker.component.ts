@@ -15,9 +15,7 @@ import {
   lastDateInMonth,
   datesEqual,
   addMonths,
-  serializeIso8601String,
-  monthName,
-  monthNumber
+  serializeIso8601String
 } from 'typescript-calendar-date';
 import {map} from "lit/directives/map.js";
 import {classMap} from "lit/directives/class-map.js";
@@ -45,47 +43,56 @@ export default class SlDatepicker extends ShoelaceElement {
 
   // private readonly localize = new LocalizeController(this);
 
-  /** An example attribute. */
-  @property() attr = 'example';
+  @property()
+  locale = navigator.language;
 
   /** The selected date, in ISO string format: 'yyyy-mm-dd' */
   @property({type: String, reflect: true})
   date: string = new Date().toISOString().slice(0, 10);
 
-  /** The month currently being displayed. */
+  /** The month currently being displayed. This date should always include day 01 of the month. */
   @property({attribute: false})
-  month: string = this.date.slice(0, 7);
+  month: CalendarMonth = parseIso8601String(this.date);
 
   @watch('date')
   async handleDateChange() {
     // Ensures the displayed month matches the selected date whenever it changes.
-    this.month = this.date.slice(0, 7);
+    this.month = parseIso8601String(this.date);
   }
 
   private handleDayClick(date: CalendarDate) {
     this.date = serializeIso8601String(date);
+    // TODO: Add the selected date to the event details
     this.emit('sl-change');
   }
 
   private handleNavigationClick(monthDelta: number) {
-    const month: CalendarMonth = parseMonth(this.month);
-    this.month = serializeMonth(addMonths(month, monthDelta));
+    this.month = addMonths(this.month, monthDelta);
+  }
+
+  private formatMonthName(date: CalendarDate): string {
+    const monthNameFormat = new Intl.DateTimeFormat(this.locale, { month: "long" }).format;
+    return monthNameFormat(new Date(serializeIso8601String(date)))
+  }
+
+  private getWeekdayNames() {
+    const format = new Intl.DateTimeFormat(this.locale, { weekday: 'short' }).format;
+    return [...Array(7).keys()]
+      .map((day) => format(new Date(Date.UTC(2021, 1, day+1))));
   }
 
   render() {
+    // TODO: Maybe use day.js for simpler translations and date manipulation
     const date = parseIso8601String(this.date);
-    const month: CalendarMonth = parseMonth(this.month);
-    const monthId = month.month;
-    const firstOfMonth: CalendarDate = { ...month, day: 1 };
+    const monthId = this.month.month;
+    const firstOfMonth: CalendarDate = { ...this.month, day: 1 };
+    const endOfMonth = lastDateInMonth(this.month);
     const weekDay = weekDays.indexOf(dayOfWeek(firstOfMonth));
     const firstOfCalendar = addDays(firstOfMonth, -weekDay);
-    let endOfCalendar = lastDateInMonth(month);
-    const lastWeekDay = weekDays.indexOf(dayOfWeek(endOfCalendar));
-    if (lastWeekDay < 6) {
-      endOfCalendar = addDays(endOfCalendar, 6 - lastWeekDay);
-    }
+    const endOfCalendar = addDays(endOfMonth, 6 - weekDays.indexOf(dayOfWeek(endOfMonth)));
+    // Lists all days that will be displayed in the calendar
     const days= periodOfDates(firstOfCalendar, endOfCalendar);
-    // return html`Hello, World!`;
+    const weekdays = this.getWeekdayNames().map((w) => w.slice(0, 2));
     return html`
     <div>
       <div>
@@ -93,22 +100,27 @@ export default class SlDatepicker extends ShoelaceElement {
           <sl-icon-button
             name="arrow-left-short"
             @click=${() => this.handleNavigationClick(-1)}></sl-icon-button>
-          ${monthId}
+          ${this.formatMonthName(firstOfMonth)}
           <sl-icon-button
             name="arrow-right-short"
             @click=${() => this.handleNavigationClick(1)}></sl-icon-button>
         </h1>
-        <h2>${month.year}</h2>
+        <h2>${this.month.year}</h2>
       </div>
       <ol>
-        ${map(days, (d) =>
-      html`
-          <li class="${classMap({
-        "selected": datesEqual(d, date),
-        "dimmed": (d.month != monthId)})}"
-        @click=${() => this.handleDayClick(d) }>${d.day}</li>
-      `
-    )}
+        ${map(weekdays, (w) => html`
+          <li class="header">${w}</li>
+        `)}
+        ${map(days, (d) => html`
+            <li class="${classMap({
+                "day": true,
+                "selected": datesEqual(d, date),
+                "weekend": (dayOfWeek(d) === "sat" || dayOfWeek(d) === "sun"),
+                "dimmed": (d.month != monthId)})}"
+              @click=${() => this.handleDayClick(d) }>
+              ${d.day}
+            </li>
+        `)}
       </ol>
     </div>
     `;
@@ -116,20 +128,3 @@ export default class SlDatepicker extends ShoelaceElement {
 }
 
 const weekDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-
-function parseMonth(date: string): CalendarMonth {
-  const match = /^(\d{4})-(\d{2})$/.exec(date);
-  if (!match) {
-    throw "The string \"" + date + "\" does not match the format YYYY-MM";
-  }
-  const year = parseInt(match[1], 10);
-  const monthNumber = parseInt(match[2], 10);
-  if (monthNumber < 1 || monthNumber > 12) {
-    throw "The string \"" + date + "\" does not have a month number between 01 and 12";
-  }
-  return { year: year, month: monthName(monthNumber) };
-}
-
-function serializeMonth(month: CalendarMonth): string {
-  return `${month.year}-${monthNumber(month.month).toString().padStart(2, '0')}`;
-}

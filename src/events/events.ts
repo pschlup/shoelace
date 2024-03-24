@@ -9,6 +9,7 @@ export type { SlClearEvent } from './sl-clear.js';
 export type { SlCloseEvent } from './sl-close.js';
 export type { SlCollapseEvent } from './sl-collapse.js';
 export type { SlCopyEvent } from './sl-copy.js';
+export type { SlDateChangeEvent } from './sl-date-change.js';
 export type { SlErrorEvent } from './sl-error.js';
 export type { SlExpandEvent } from './sl-expand.js';
 export type { SlFinishEvent } from './sl-finish.js';

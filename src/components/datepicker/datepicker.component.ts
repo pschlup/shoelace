@@ -30,7 +30,7 @@ import SlIconButton from "../icon-button/icon-button.component.js";
  * @dependency sl-icon-button
  * @dependency sl-icon
  *
- * @event sl-change - Emitted when the selected date changes.
+ * @event sl-date-change - Emitted when the selected date changes.
  *
  * @csspart base - The component's base wrapper.
  */
@@ -40,8 +40,6 @@ export default class SlDatepicker extends ShoelaceElement {
   static dependencies = {
     'sl-icon-button': SlIconButton
   };
-
-  // private readonly localize = new LocalizeController(this);
 
   @property()
   locale = navigator.language;
@@ -63,7 +61,11 @@ export default class SlDatepicker extends ShoelaceElement {
   private handleDayClick(date: CalendarDate) {
     this.date = serializeIso8601String(date);
     // TODO: Add the selected date to the event details
-    this.emit('sl-change');
+    this.emit('sl-date-change', {
+      detail: {
+        date: this.date,
+      }
+    });
   }
 
   private handleNavigationClick(monthDelta: number) {

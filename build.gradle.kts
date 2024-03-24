@@ -9,6 +9,6 @@ node {
 
 tasks {
   named("npm_run_build") {
-    outputs.dir(layout.buildDirectory.dir("cdn"))
+    outputs.dir(layout.projectDirectory.dir("cdn"))
   }
 }

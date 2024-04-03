@@ -59,6 +59,7 @@ export { default as SlTreeItem } from './components/tree-item/tree-item.js';
 export { default as SlVisuallyHidden } from './components/visually-hidden/visually-hidden.js';
 export { default as SlDatepicker } from './components/datepicker/datepicker.js';
 export { default as SlDatepickerDropdown } from './components/datepicker-dropdown/datepicker-dropdown.js';
+export { default as SlMonetaryInput } from './components/monetary-input/monetary-input.js';
 /* plop:component */
 
 // Utilities
